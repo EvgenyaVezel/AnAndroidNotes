@@ -7,8 +7,8 @@
     <string name="content_note2"> содержимое заметки 2</string>
     <string name="content_note3"> содержимое заметки 3</string>
     <string name="date_note">Date note</string>
-    <string name="btn_date">set date</string>
-    <string name="btn_time">set time</string>
+    <string name="btn_date">date</string>
+    <string name="btn_time">time</string>
     <string name="text_note">Time note</string>
 
 </resources>

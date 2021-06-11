@@ -28,7 +28,8 @@ import java.util.Locale;
 
 public class NoteContentFragment extends Fragment {
     private static final String KEY_NOTE = "KEY_NOTE";
-    final Calendar calendar = Calendar.getInstance();
+
+
     public static NoteContentFragment getInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
 
@@ -47,27 +48,51 @@ public class NoteContentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Note note = getArguments().getParcelable(KEY_NOTE);
+
+        Calendar calendar = note.getCalendar();
         int cYear = calendar.get(Calendar.YEAR);
         int cMonth = calendar.get(Calendar.MONTH);
         int cDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
+        int cHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int cMinute = calendar.get(Calendar.MINUTE);
+
         EditText headNote = view.findViewById(R.id.content_note_head);
         EditText contentNote = view.findViewById(R.id.note_content);
         EditText dateView = view.findViewById(R.id.edit_text_date);
+        EditText timeView = view.findViewById(R.id.edit_text_time);
         Button bntDate = view.findViewById(R.id.btn_date);
-               Note note = getArguments().getParcelable(KEY_NOTE);
+        Button btnText = view.findViewById(R.id.btn_time);
+
 
         bntDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-              DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view1, year, month, dayOfMonth) -> {
-                  calendar.set(year, month, dayOfMonth);
-                  note.setDate(calendar.getTime());
+                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view1, year, month, dayOfMonth) -> {
+                    String formatDate = "dd.MM.yyyy";
+                    calendar.set(year, month, dayOfMonth);
+                    note.setDate(calendar.getTime());
 
-                 updateDateText(dateView);
-              }, cYear, cMonth, cDayOfMonth);
-              datePickerDialog.show();
+                    updateDateText(dateView, calendar, formatDate);
+                }, cYear, cMonth, cDayOfMonth);
+                datePickerDialog.show();
+            }
+        });
+
+        btnText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (TimePickerDialog.OnTimeSetListener) (view12, hourOfDay, minute) -> {
+                    calendar.set(hourOfDay, minute);
+                    String formatTime = "hh:mm";
+                    note.setDate(calendar.getTime());
+                    updateDateText(timeView, calendar,formatTime );
+                    },  cHourOfDay, cMinute, false);
+
+                 timePickerDialog.show();
             }
         });
 
@@ -76,11 +101,13 @@ public class NoteContentFragment extends Fragment {
         contentNote.setText(note.getContent());
 
     }
-    private void updateDateText(EditText dateView){
-        String formatDate = "dd.MM.yyyy";
+
+    private void updateDateText(EditText dateView, Calendar calendar, String formatDate) {
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
 
         dateView.setText(simpleDateFormat.format(calendar.getTime()));
     }
+
 
 }

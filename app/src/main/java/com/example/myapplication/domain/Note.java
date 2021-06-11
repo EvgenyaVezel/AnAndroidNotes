@@ -3,13 +3,14 @@ package com.example.myapplication.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
 
 public class Note implements Parcelable {
 
-
+    private Calendar calendar = Calendar.getInstance();
     private String  head;
     private Date date;
     private String  content;
@@ -19,9 +20,9 @@ public class Note implements Parcelable {
         this.head = head;
         this.date = date;
         this.content = content;
+        calendar.setTime(date);
 
     }
-
 
 
     protected Note(Parcel in) {
@@ -53,6 +54,9 @@ public class Note implements Parcelable {
         this.date = date;
     }
 
+    public Calendar getCalendar() {
+        return calendar;
+    }
 
     public void setHead(String head) {
         this.head = head;

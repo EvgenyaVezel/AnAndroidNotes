@@ -7,18 +7,16 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.myapplication.AboutAppFragment;
+import com.example.myapplication.ui.menu.AboutAppFragment;
 import com.example.myapplication.R;
 import com.example.myapplication.domain.Note;
-import com.example.myapplication.ui.details.NoteContentActivity;
 import com.example.myapplication.ui.details.NoteContentFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,12 +29,12 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         Toolbar toolbar = findViewById(R.id.toolbar);
 
 
-        setSupportActionBar(toolbar);
+       /* setSupportActionBar(toolbar);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_list, new NotesListFragment())
                 .commit();
-
+*/
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawerLayout.closeDrawer(GravityCompat.START);
 
-                if(item.getItemId() == R.id.about_app){
+                if (item.getItemId() == R.id.about_app) {
                     getSupportFragmentManager()
                             .beginTransaction()
                             .addToBackStack(null)
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
 
     }
 
-
     @Override
     public void onNoteClicked(Note note) {
         boolean isLandscape = getResources().getBoolean(R.bool.isLandscape);
@@ -78,9 +75,14 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
                     .commit();
         } else {
 
-            Intent intent = new Intent(this, NoteContentActivity.class);
-            intent.putExtra(NoteContentActivity.ARG_NOTE, note);
-            startActivity(intent);
+            Fragment listFragment = getSupportFragmentManager().findFragmentById(R.id.container_list);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, NoteContentFragment.getInstance(note))
+                    .hide(listFragment)
+                    .addToBackStack(null)
+                    .commit();
+
         }
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/about_app"
-    tools:context=".AboutAppFragment">
+    tools:context=".ui.menu.AboutAppFragment">
 
     <TextView
         android:id="@+id/text_view_about_app"

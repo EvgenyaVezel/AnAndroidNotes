@@ -14,9 +14,9 @@ public class NotesRepositoryImp implements NotesRepository{
     public List<Note> getNotes() {
         List<Note> result = new ArrayList<>();
 
-        result.add(new Note("Заметка1", Calendar.getInstance().getTime(),  "Соержимое заметки 1..."));
-        result.add(new Note("Заметка2", Calendar.getInstance().getTime(),  "Соержимое заметки 2..."));
-        result.add(new Note("Заметка3", Calendar.getInstance().getTime(),  "Соержимое заметки 3..."));
+        result.add(new Note("Заметка 1", Calendar.getInstance().getTime(),  "Соержимое заметки 1..."));
+        result.add(new Note("Заметка 2", Calendar.getInstance().getTime(),  "Соержимое заметки 2..."));
+        result.add(new Note("Заметка 3", Calendar.getInstance().getTime(),  "Соержимое заметки 3..."));
 
         return result;
     }

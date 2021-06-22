@@ -10,5 +10,15 @@
     <string name="btn_date">date</string>
     <string name="btn_time">time</string>
     <string name="text_note">Time note</string>
+    <string name="search">search</string>
+    <string name="add">add</string>
+    <string name="edit">edit</string>
+    <string name="delete">delete</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_app">About APP</string>
+    <string name="about_app_content">Приложение \'Заметки\' разработано в рамках обучения в GeekBrains</string>
+    <string name="mail">android_studio@gmail.com</string>
+    <string name="username">Android Studio</string>
 
 </resources>

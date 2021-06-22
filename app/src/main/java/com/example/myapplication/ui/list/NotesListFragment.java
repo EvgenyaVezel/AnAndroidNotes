@@ -3,11 +3,13 @@ package com.example.myapplication.ui.list;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +44,6 @@ public class NotesListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         onNoteClicked = null;
     }
 
@@ -74,13 +75,37 @@ public class NotesListFragment extends Fragment {
             });
 
             TextView noteHead = itemView.findViewById(R.id.item_note);
+            noteHead.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                    requireActivity().getMenuInflater().inflate(R.menu.menu_list_fragment, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.option_edit) {
+                                Toast.makeText(requireContext(), "note edited", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+                            if (item.getItemId() == R.id.option_delete) {
+                                Toast.makeText(requireContext(), "note deleted", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+                    return false;
+                }
+            });
 
             noteHead.setText(note.getHead());
-
             noteList.addView(itemView);
 
         }
 
-
     }
+
 }

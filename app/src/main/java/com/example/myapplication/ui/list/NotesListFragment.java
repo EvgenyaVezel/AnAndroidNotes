@@ -6,14 +6,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.domain.Note;
@@ -24,13 +24,9 @@ import java.util.List;
 
 public class NotesListFragment extends Fragment {
 
-    public interface OnNoteClicked {
-        void onNoteClicked(Note note);
-    }
-
     private NotesRepository notesRepository;
-
     private OnNoteClicked onNoteClicked;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -59,53 +55,90 @@ public class NotesListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout noteList = view.findViewById(R.id.list_notes);
+        RecyclerView noteList = view.findViewById(R.id.list_notes);
+        noteList.setLayoutManager(new LinearLayoutManager(requireContext()));
+
         List<Note> notes = notesRepository.getNotes();
+        NotesAdapter notesAdapter = new NotesAdapter();
+        notesAdapter.setData(notes);
 
-        for (Note note : notes) {
+        notesAdapter.setListener(note -> {
+            if (onNoteClicked != null) {
+                onNoteClicked.onNoteClicked(note);
+            }
+        });
 
-            View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.item_note, noteList, false);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onNoteClicked != null) {
-                        onNoteClicked.onNoteClicked(note);
-                    }
-                }
-            });
-
-            TextView noteHead = itemView.findViewById(R.id.item_note);
-            noteHead.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
-                    requireActivity().getMenuInflater().inflate(R.menu.menu_list_fragment, popupMenu.getMenu());
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getItemId() == R.id.option_edit) {
-                                Toast.makeText(requireContext(), "note edited", Toast.LENGTH_SHORT).show();
-                                return true;
+        notesAdapter.setOnToolbarClickListener(new NotesAdapter.OnToolbarClickListener() {
+            @Override
+            public boolean onToolbarClicked(@NonNull Note note, androidx.appcompat.widget.Toolbar toolbar) {
+                toolbar.setOnMenuItemClickListener(new androidx.appcompat.widget.Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int itemId = item.getItemId();
+                        if (itemId == R.id.option_edit) {
+                            if (onNoteClicked != null) {
+                                onNoteClicked.onNoteClicked(note);
                             }
-                            if (item.getItemId() == R.id.option_delete) {
-                                Toast.makeText(requireContext(), "note deleted", Toast.LENGTH_SHORT).show();
-                                return true;
-                            }
-
-                            return false;
+                            return true;
+                        } else if (itemId == R.id.option_delete) {
+                            Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
+                            return true;
                         }
-                    });
-                    popupMenu.show();
-                    return false;
-                }
-            });
+                        return false;
+                    }
+                });
+                return false;
+            }
+        });
 
-            noteHead.setText(note.getHead());
-            noteList.addView(itemView);
 
-        }
+        noteList.setAdapter(notesAdapter);
 
+        notesAdapter.notifyDataSetChanged();
     }
+
+    public interface OnNoteClicked {
+
+        void onNoteClicked(Note note);
+    }
+
+
+
+       /* Toolbar toolbar = view.findViewById(R.id.card_toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.option_edit) {
+                    Toast.makeText(requireContext(), "edited note", Toast.LENGTH_SHORT).show();
+                    return true;
+                } else if (itemId == R.id.option_delete) {
+                    Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                return false;
+            }
+        });*/
+
+       /* notesAdapter.setListenerLong(note -> {
+            PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+            popupMenu.inflate(R.menu.menu_list_fragment);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.option_edit) {
+                    onNoteClicked.onNoteClicked(note);
+                    return true;
+                } else if (itemId == R.id.option_delete) {
+                    Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                return false;
+            });
+            popupMenu.show();
+            return false;
+        });*/
+
 
 }

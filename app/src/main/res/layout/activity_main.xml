@@ -24,7 +24,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/space_gray" />
+                android:background="@color/space_gray"
+                app:menu="@menu/menu_appbar_notes"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout

@@ -5,5 +5,9 @@
         android:title="@string/about_app"
         android:id="@+id/about_app">
     </item>
+    <item
+        android:title="@string/notes_main"
+        android:id="@+id/notes_main">
+    </item>
 
 </menu>

@@ -13,7 +13,7 @@ public class Note implements Parcelable {
     private Calendar calendar = Calendar.getInstance();
     private String  head;
     private Date date;
-    private String  content;
+    private String content;
 
 
     public Note(String head, Date date, String content) {

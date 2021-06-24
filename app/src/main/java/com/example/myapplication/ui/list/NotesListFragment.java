@@ -27,7 +27,6 @@ public class NotesListFragment extends Fragment {
     private NotesRepository notesRepository;
     private OnNoteClicked onNoteClicked;
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -68,27 +67,21 @@ public class NotesListFragment extends Fragment {
             }
         });
 
-        notesAdapter.setOnToolbarClickListener(new NotesAdapter.OnToolbarClickListener() {
-            @Override
-            public boolean onToolbarClicked(@NonNull Note note, androidx.appcompat.widget.Toolbar toolbar) {
-                toolbar.setOnMenuItemClickListener(new androidx.appcompat.widget.Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
-                        if (itemId == R.id.option_edit) {
-                            if (onNoteClicked != null) {
-                                onNoteClicked.onNoteClicked(note);
-                            }
-                            return true;
-                        } else if (itemId == R.id.option_delete) {
-                            Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                        return false;
+        notesAdapter.setOnToolbarClickListener((note, toolbar) -> {
+            toolbar.setOnMenuItemClickListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.option_edit) {
+                    if (onNoteClicked != null) {
+                        onNoteClicked.onNoteClicked(note);
                     }
-                });
+                    return true;
+                } else if (itemId == R.id.option_delete) {
+                    Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 return false;
-            }
+            });
+            return false;
         });
 
 
@@ -101,44 +94,5 @@ public class NotesListFragment extends Fragment {
 
         void onNoteClicked(Note note);
     }
-
-
-
-       /* Toolbar toolbar = view.findViewById(R.id.card_toolbar);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.option_edit) {
-                    Toast.makeText(requireContext(), "edited note", Toast.LENGTH_SHORT).show();
-                    return true;
-                } else if (itemId == R.id.option_delete) {
-                    Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-                return false;
-            }
-        });*/
-
-       /* notesAdapter.setListenerLong(note -> {
-            PopupMenu popupMenu = new PopupMenu(requireContext(), view);
-            popupMenu.inflate(R.menu.menu_list_fragment);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                int itemId = item.getItemId();
-                if (itemId == R.id.option_edit) {
-                    onNoteClicked.onNoteClicked(note);
-                    return true;
-                } else if (itemId == R.id.option_delete) {
-                    Toast.makeText(requireContext(), "deleted note", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-                return false;
-            });
-            popupMenu.show();
-            return false;
-        });*/
-
 
 }

@@ -2,5 +2,8 @@
 <resources>
     <dimen name="view_padding">16dp</dimen>
     <dimen name="margin_top_drawer_header">20dp</dimen>
+    <dimen name="default_margin">20dp</dimen>
+    <dimen name="text_size_title_note">20sp</dimen>
+    <dimen name="text_size_date_note">12sp</dimen>
 
 </resources>

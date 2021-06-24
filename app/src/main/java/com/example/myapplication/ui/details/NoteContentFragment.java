@@ -29,6 +29,8 @@ import java.util.Locale;
 public class NoteContentFragment extends Fragment {
     private static final String KEY_NOTE = "KEY_NOTE";
 
+    private EditText contentNote;
+    private EditText headNote;
 
     public static NoteContentFragment getInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
@@ -58,16 +60,12 @@ public class NoteContentFragment extends Fragment {
         int cHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int cMinute = calendar.get(Calendar.MINUTE);
 
-        EditText headNote = view.findViewById(R.id.content_note_head);
-        EditText contentNote = view.findViewById(R.id.note_content);
+        headNote = view.findViewById(R.id.content_note_head);
+        contentNote = view.findViewById(R.id.note_content);
         EditText dateView = view.findViewById(R.id.edit_text_date);
         EditText timeView = view.findViewById(R.id.edit_text_time);
-        Button bntDate = view.findViewById(R.id.btn_date);
-        Button btnText = view.findViewById(R.id.btn_time);
 
-
-        bntDate.setOnClickListener(new View.OnClickListener() {
-
+        dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view1, year, month, dayOfMonth) -> {
@@ -77,25 +75,26 @@ public class NoteContentFragment extends Fragment {
 
                     updateDateText(dateView, calendar, formatDate);
                 }, cYear, cMonth, cDayOfMonth);
+                note.setDate(calendar.getTime());
                 datePickerDialog.show();
             }
+
         });
 
-        btnText.setOnClickListener(new View.OnClickListener() {
-
+        timeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (TimePickerDialog.OnTimeSetListener) (view12, hourOfDay, minute) -> {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (view12, hourOfDay, minute) -> {
                     calendar.set(hourOfDay, minute);
                     String formatTime = "hh:mm";
                     note.setDate(calendar.getTime());
-                    updateDateText(timeView, calendar,formatTime );
-                    },  cHourOfDay, cMinute, false);
+                    updateDateText(timeView, calendar, formatTime);
+                }, cHourOfDay, cMinute, false);
+                note.setDate(calendar.getTime());
 
-                 timePickerDialog.show();
+                timePickerDialog.show();
             }
         });
-
 
         headNote.setText(note.getHead());
         contentNote.setText(note.getContent());
@@ -105,9 +104,16 @@ public class NoteContentFragment extends Fragment {
     private void updateDateText(EditText dateView, Calendar calendar, String formatDate) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
-
         dateView.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Note note = getArguments().getParcelable(KEY_NOTE);
 
+        note.setHead(headNote.getText().toString());
+        note.setContent(contentNote.getText().toString());
+
+    }
 }

@@ -28,14 +28,6 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-
-       /* setSupportActionBar(toolbar);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_list, new NotesListFragment())
-                .commit();
-*/
-
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
@@ -56,6 +48,15 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
                             .beginTransaction()
                             .addToBackStack(null)
                             .replace(R.id.container, new AboutAppFragment())
+                            .commit();
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.notes_main) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack(null)
+                            .replace(R.id.container, new NotesListFragment())
                             .commit();
                     return true;
                 }
@@ -111,9 +112,11 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.option_add) {
+
             Toast.makeText(this, "added note", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
     }
+
 }
